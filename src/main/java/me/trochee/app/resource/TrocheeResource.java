@@ -1,15 +1,27 @@
 package me.trochee.app.resource;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import me.trochee.app.foo.Trochees;
 
-@Path("/")
-@Produces("text/html")
+import javax.ws.rs.*;
+import java.util.function.Supplier;
+
+@Path("/trochee")
+@Produces("application/json")
+@Consumes("application/json")
 public class TrocheeResource {
 
-    @GET
-    public String get() {
-        return "TROCHEE";
+    private final Supplier<String> cycler;
+    private final Trochees trochees;
+
+    public TrocheeResource(Trochees trochees) {
+        this.trochees = trochees;
+        cycler = trochees.cycler();
     }
+
+    @GET
+    @Path("/next")
+    public String next() {
+        return cycler.get();
+    }
+
 }

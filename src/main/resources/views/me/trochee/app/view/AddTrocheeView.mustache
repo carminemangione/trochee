@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/assets/css/all.css"/>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+</head>
+<body>
+<div>
+    <div id="animated-trochees" data-animated-trochees="{{animatedTrocheesJson}}"></div>
+</div>
+<script>
+    $(document).ready(function () {
+        var $animatedTrochees = $('#animated-trochees');
+        var trochees = $animatedTrochees.data("animated-trochees");
+
+        var svg = d3.select("#animated-trochees").append("svg").attr("width", "100%").attr("height", "100%");
+
+        setInterval(function () {
+            var scale = Math.random() * 4 + 1;
+            var duration = 50000 / scale;
+            var textRoot = svg.append("g")
+                    .attr("transform", "translate(" + [0, -500] + ")");
+
+            var text = textRoot.selectAll("text")
+                    .data([trochees[Math.floor(Math.random() * trochees.length)]])
+                    .enter()
+                    .append("text")
+                    .attr("text-anchor", "bottom")
+                    .attr("transform", "scale(" + scale + ")")
+                    .text(function (d) {
+                        return d;
+                    });
+
+            var bBox = text[0][0].getBBox();
+            var textWidth = bBox.width;
+            var textHeight = bBox.height;
+            var maxXAnchor = window.innerWidth - textWidth - 10;
+            var xAnchor = Math.random() * maxXAnchor;
+            console.log(scale, textWidth, maxXAnchor, maxXAnchor + textWidth, xAnchor);
+            textRoot.attr("transform", "translate(" + [xAnchor, -5] + ")");
+
+            textRoot.transition()
+                    .attr("transform", "translate(" + [xAnchor, window.innerHeight + 15 + textHeight] + ")")
+                    .ease("linear")
+                    .duration(duration)
+                    .remove();
+        }, 1500);
+    });
+</script>
+</body>
+</html>
