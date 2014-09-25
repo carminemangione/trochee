@@ -13,7 +13,7 @@
 <script>
     $(document).ready(function () {
         var $animatedTrochees = $('#animated-trochees');
-//        var trochees = $animatedTrochees.data("animated-trochees");
+        var trochees = $animatedTrochees.data("animated-trochees");
 
         var svg = d3.select("#animated-trochees").append("svg").attr("width", "100%").attr("height", "100%");
 
@@ -24,7 +24,7 @@
                     .attr("transform", "translate(" + [0, -500] + ")");
 
             var text = textRoot.selectAll("text")
-                    .data(["camel"])
+                    .data([trochees[Math.floor(Math.random() * trochees.length)]])
                     .enter()
                     .append("text")
                     .attr("text-anchor", "bottom")
