@@ -13,44 +13,40 @@
 <script>
     $(document).ready(function () {
         var $animatedTrochees = $('#animated-trochees');
-        var trochees = $animatedTrochees.data("animated-trochees");
+//        var trochees = $animatedTrochees.data("animated-trochees");
 
-        var svg = d3.select("#animated-trochees").append("svg").attr("width", 100).attr("height", "100%");
+        var svg = d3.select("#animated-trochees").append("svg").attr("width", "100%").attr("height", "100%");
 
+        setInterval(function () {
+            var scale = Math.random() * 4 + 1;
+            var duration = 50000 / scale;
+            var textRoot = svg.append("g")
+                    .attr("transform", "translate(" + [0, -500] + ")");
 
-        var totalHeight = (trochees.length + 1) * 60;
-        console.log(Math.max(window.innerHeight, totalHeight))
+            var text = textRoot.selectAll("text")
+                    .data(["camel"])
+                    .enter()
+                    .append("text")
+                    .attr("text-anchor", "bottom")
+                    .attr("transform", "scale(" + scale + ")")
+                    .text(function (d) {
+                        return d;
+                    });
 
-        var duration = 10000;//trochees * 10 * 1000;
+            var bBox = text[0][0].getBBox();
+            var textWidth = bBox.width;
+            var textHeight = bBox.height;
+            var maxXAnchor = window.innerWidth - textWidth - 10;
+            var xAnchor = Math.random() * maxXAnchor;
+            console.log(scale, textWidth, maxXAnchor, maxXAnchor + textWidth, xAnchor);
+            textRoot.attr("transform", "translate(" + [xAnchor, -5] + ")");
 
-        var textRoot = svg.append("g")
-                .attr("transform", "scale(2)")
-                .append("g");
-
-
-        textRoot.selectAll("text")
-                .data(trochees)
-                .enter()
-                .append("text")
-                .attr("dy", function (d, index) {
-                    return (index + 1) * -60
-                })
-                .attr("text-anchor", "bottom")
-                .text(function (d) {
-                    return d;
-                });
-
-        function animateTextRoot(){
-                        textRoot.attr("transform", "translate(" + [0, 0] + ")")
-                                .transition()
-                                .attr("transform", "translate(" + [0,
-                                    Math.max(window.innerHeight, totalHeight)] + ")")
-                                .ease("linear")
-                                .duration(duration)
-                                .each("end", animateTextRoot);
-
-        }
-        animateTextRoot();
+            textRoot.transition()
+                    .attr("transform", "translate(" + [xAnchor, window.innerHeight + 15 + textHeight] + ")")
+                    .ease("linear")
+                    .duration(duration)
+                    .remove();
+        }, 1500);
     });
 </script>
 </body>
