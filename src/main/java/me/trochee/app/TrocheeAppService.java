@@ -4,7 +4,8 @@ import io.dropwizard.Application;
 import io.dropwizard.Configuration;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import me.trochee.app.resource.TrocheeResource;
+import io.dropwizard.views.ViewBundle;
+import me.trochee.app.resource.RootResource;
 
 public class TrocheeAppService extends Application<Configuration> {
 
@@ -13,13 +14,13 @@ public class TrocheeAppService extends Application<Configuration> {
     }
 
     @Override
-    public void initialize(Bootstrap<Configuration> configurationBootstrap) {
-
+    public void initialize(Bootstrap<Configuration> bootstrap) {
+        bootstrap.addBundle(new ViewBundle());
     }
 
     @Override
     public void run(Configuration configuration, Environment environment) throws Exception {
-        environment.jersey().register(TrocheeResource.class);
+        environment.jersey().register(RootResource.class);
     }
 
 }

@@ -1,15 +1,17 @@
 package me.trochee.app.resource;
 
+import me.trochee.app.view.RootView;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 @Path("/")
 @Produces("text/html")
-public class TrocheeResource {
+public class RootResource {
 
     @GET
-    public String get() {
-        return "TROCHEE";
+    public RootView get() {
+        return new RootView("ninja");
     }
 }

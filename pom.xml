@@ -14,6 +14,11 @@
             <artifactId>dropwizard-core</artifactId>
             <version>0.7.1</version>
         </dependency>
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-views-mustache</artifactId>
+            <version>0.7.1</version>
+        </dependency>
     </dependencies>
 
     <build>
