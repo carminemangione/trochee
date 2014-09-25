@@ -2,6 +2,8 @@
 SECTIONS
 1. RESET
 2. COMMON CSS
+3. ROOT
+4. ADD
 */
 
 
@@ -58,4 +60,19 @@ h1 {
     font-size:5em;
     text-align: center;
     margin: 200px 0 0 0;
+}
+
+text {
+    fill: white;
+}
+
+/*
+3
+*/
+
+/*
+4
+*/
+#animated-trochees {
+    height: 100%;
 }

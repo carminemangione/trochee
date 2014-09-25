@@ -6,7 +6,11 @@ import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
+import me.trochee.app.foo.Trochees;
+import me.trochee.app.resource.AddTrocheeResource;
 import me.trochee.app.resource.RootResource;
+import me.trochee.db.PooledDataSource;
+import me.trochee.db.TrocheeDataSourceFactory;
 
 public class TrocheeAppService extends Application<Configuration> {
 
@@ -22,7 +26,12 @@ public class TrocheeAppService extends Application<Configuration> {
 
     @Override
     public void run(Configuration configuration, Environment environment) throws Exception {
-        environment.jersey().register(RootResource.class);
+        final PooledDataSource trocheeDB = TrocheeDataSourceFactory.INSTANCE.make();
+        environment.lifecycle().manage(trocheeDB);
+
+        final Trochees trochees = Trochees.load(trocheeDB);
+        environment.jersey().register(new RootResource(trochees));
+        environment.jersey().register(new AddTrocheeResource(trochees));
     }
 
 }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/assets/css/all.css"/>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+</head>
+<body>
+<div>
+    <div id="animated-trochees" data-animated-trochees="{{animatedTrocheesJson}}"></div>
+</div>
+<script>
+    $(document).ready(function () {
+        var $animatedTrochees = $('#animated-trochees');
+        var trochees = $animatedTrochees.data("animated-trochees");
+
+        var svg = d3.select("#animated-trochees").append("svg").attr("width", 100).attr("height", "100%");
+
+
+        var totalHeight = (trochees.length + 1) * 60;
+        console.log(Math.max(window.innerHeight, totalHeight))
+
+        var duration = 10000;//trochees * 10 * 1000;
+
+        var textRoot = svg.append("g")
+                .attr("transform", "scale(2)")
+                .append("g");
+
+
+        textRoot.selectAll("text")
+                .data(trochees)
+                .enter()
+                .append("text")
+                .attr("dy", function (d, index) {
+                    return (index + 1) * -60
+                })
+                .attr("text-anchor", "bottom")
+                .text(function (d) {
+                    return d;
+                });
+
+        function animateTextRoot(){
+                        textRoot.attr("transform", "translate(" + [0, 0] + ")")
+                                .transition()
+                                .attr("transform", "translate(" + [0,
+                                    Math.max(window.innerHeight, totalHeight)] + ")")
+                                .ease("linear")
+                                .duration(duration)
+                                .each("end", animateTextRoot);
+
+        }
+        animateTextRoot();
+    });
+</script>
+</body>
+</html>
