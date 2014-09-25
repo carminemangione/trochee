@@ -6,7 +6,7 @@ import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
-import me.trochee.app.foo.Trochees;
+import me.trochee.app.trochees.Trochees;
 import me.trochee.app.resource.AddTrocheeResource;
 import me.trochee.app.resource.RootResource;
 import me.trochee.app.resource.TrocheeResource;

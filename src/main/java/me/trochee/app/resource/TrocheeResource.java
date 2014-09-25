@@ -1,6 +1,6 @@
 package me.trochee.app.resource;
 
-import me.trochee.app.foo.Trochees;
+import me.trochee.app.trochees.Trochees;
 
 import javax.ws.rs.*;
 import java.util.function.Supplier;

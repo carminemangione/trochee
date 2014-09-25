@@ -1,4 +1,4 @@
-package me.trochee.app.foo;
+package me.trochee.app.trochees;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;

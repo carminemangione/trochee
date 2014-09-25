@@ -1,6 +1,6 @@
 package me.trochee.app.resource;
 
-import me.trochee.app.foo.Trochees;
+import me.trochee.app.trochees.Trochees;
 import me.trochee.app.view.AddTrocheeView;
 
 import javax.ws.rs.GET;
