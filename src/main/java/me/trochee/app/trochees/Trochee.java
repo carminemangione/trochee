@@ -34,6 +34,7 @@ public class Trochee {
     private static final String LOAD_ONE = Queries.fromResource("sql/lexicon/load_one.sql");
 
     public static Optional<String> load(DataSource db, String trochee) throws SQLException {
+        trochee = normalize(trochee);
         String[] retrieved = {null};
         try (Connection connection = db.getConnection();
              PreparedStatement ps = connection.prepareStatement(LOAD_ONE)) {
@@ -55,11 +56,18 @@ public class Trochee {
      */
     public static int insert(DataSource db, List<String> trochees) throws SQLException {
         final String[] trocheeArray = trochees.toArray(new String[trochees.size()]);
+        for (int i = 0; i < trocheeArray.length; i++) {
+            trocheeArray[i] = normalize(trocheeArray[i]);
+        }
 
         try (Connection connection = db.getConnection();
              PreparedStatement ps = connection.prepareStatement(INSERT)) {
             ps.setArray(1, connection.createArrayOf("varchar", trocheeArray));
             return ps.executeUpdate();
         }
+    }
+
+    public static String normalize(String trochee) {
+        return trochee == null ? null : trochee.trim().toLowerCase();
     }
 }

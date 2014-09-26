@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import me.trochee.app.trochees.Trochee;
 import me.trochee.app.trochees.Trochees;
 import me.trochee.db.PooledDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import java.sql.SQLException;
@@ -18,12 +20,12 @@ import java.util.function.Supplier;
 @Consumes("application/json")
 public class TrocheeResource {
 
+    private final static Logger LOG = LoggerFactory.getLogger(TrocheeResource.class);
+
     private final Supplier<String> cycler;
-    private final Trochees trochees;
     private final PooledDataSource trocheeDB;
 
     public TrocheeResource(Trochees trochees, PooledDataSource trocheeDB) {
-        this.trochees = trochees;
         this.trocheeDB = trocheeDB;
         cycler = trochees.cycler();
     }
@@ -35,7 +37,11 @@ public class TrocheeResource {
             Trochee.insert(trocheeDB, ImmutableList.of(trochee));
             final Optional<String> loaded = Trochee.load(trocheeDB, trochee);
             return trochee(loaded.get());
-        } catch (SQLException | NoSuchElementException e) {
+        } catch (SQLException e) {
+            LOG.error("Error adding trochee: " + trochee, e);
+            throw new WebApplicationException();
+        } catch (NoSuchElementException e) {
+            LOG.error("Added trochee, but could not find it: " + trochee, e);
             throw new WebApplicationException();
         }
     }

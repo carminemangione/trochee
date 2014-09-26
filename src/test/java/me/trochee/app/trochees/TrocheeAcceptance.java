@@ -14,7 +14,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class TrocheeAcceptance {
 
@@ -48,9 +47,22 @@ public class TrocheeAcceptance {
         assertEquals(0, numReinserted);
     }
 
+    @Test
+    public void insertAndLoadsCanonize() throws Exception {
+        final int numInserted = Trochee.insert(db, ImmutableList.of("CybeR", "\tMonkey "));
+        assertEquals(2, numInserted);
+
+        assertTrue(Trochee.load(db, "moNkey").isPresent());
+        assertTrue(Trochee.load(db, "cyBer ").isPresent());
+        assertEquals(ImmutableSet.of("cyber", "monkey"), ImmutableSet.copyOf(Trochee.loadAll(db)));
+
+        final int numReinserted = Trochee.insert(db, ImmutableList.of("cyber", "monkey"));
+        assertEquals(0, numReinserted);
+    }
+
     private void truncate() throws SQLException {
-        try(Connection conection = TrocheeDataSourceFactory.INSTANCE.make().getConnection();
-            PreparedStatement ps = conection.prepareStatement(Queries.fromResource("sql/postgres/acceptance/truncate-tables.sql"))){
+        try (Connection conection = TrocheeDataSourceFactory.INSTANCE.make().getConnection();
+             PreparedStatement ps = conection.prepareStatement(Queries.fromResource("sql/postgres/acceptance/truncate-tables.sql"))) {
             ps.execute();
         }
     }

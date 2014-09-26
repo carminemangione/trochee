@@ -3,9 +3,11 @@ package me.trochee.app.resource;
 import io.dropwizard.views.View;
 import me.trochee.app.trochees.Trochee;
 import me.trochee.app.trochees.Trochees;
-import me.trochee.app.view.RootView;
 import me.trochee.app.view.TrocheeNotFoundView;
+import me.trochee.app.view.TrocheesView;
 import me.trochee.db.PooledDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import java.sql.SQLException;
@@ -16,6 +18,8 @@ import java.util.function.Supplier;
 @Produces("text/html")
 public class TrocheesResource {
 
+    private final static Logger LOG = LoggerFactory.getLogger(TrocheesResource.class);
+
     private final Supplier<String> rootCycle;
     private final PooledDataSource trocheeDB;
 
@@ -25,8 +29,8 @@ public class TrocheesResource {
     }
 
     @GET
-    public RootView get() {
-        return new RootView(rootCycle.get());
+    public TrocheesView get() {
+        return new TrocheesView(rootCycle.get());
     }
 
     @GET
@@ -36,12 +40,13 @@ public class TrocheesResource {
             final Optional<String> loaded = Trochee.load(trocheeDB, trochee);
             View toReturn;
             if (loaded.isPresent()) {
-                toReturn = new RootView(loaded.get());
+                toReturn = new TrocheesView(loaded.get());
             } else {
                 toReturn = new TrocheeNotFoundView(trochee);
             }
             return toReturn;
         } catch (SQLException e) {
+            LOG.error("Error looking up trochee: " + trochee, e);
             throw new WebApplicationException();
         }
     }

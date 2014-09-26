@@ -2,12 +2,12 @@ package me.trochee.app.view;
 
 import io.dropwizard.views.View;
 
-public class RootView extends View {
+public class TrocheesView extends View {
 
     private final String trochee;
 
-    public RootView(String trochee) {
-        super("/views/me/trochee/app/view/RootView.mustache");
+    public TrocheesView(String trochee) {
+        super("/views/me/trochee/app/view/TrocheesView.mustache");
         this.trochee = trochee;
     }
 
