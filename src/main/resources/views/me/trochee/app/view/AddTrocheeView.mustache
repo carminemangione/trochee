@@ -8,59 +8,66 @@
 </head>
 <body>
 <div>
-    <div id="animated-trochees" data-animated-trochees="{{animatedTrocheesJson}}"
-         style="position: absolute;z-index : 1;width:100%;height:100%">
+    <div id="animated-trochees"
+         class="panel-style">
 
     </div>
-    <div id="new-trochee" style="position: absolute;z-index : 10;width:100%;height:100%">
-        <h1>Poop!</h1>
+    <div id="new-trochee" class="panel-style">
+        <h1><label>
+            <input type="text" name="search" placeholder="Trochee here">
+        </label></h1>
     </div>
 </div>
 
 <script>
-    $(document).ready(function () {
-        var $animatedTrochees = $('#animated-trochees');
-        var trochees = $animatedTrochees.data("animated-trochees");
+    function drawFallingText(svg, randomTrochee, scaleFactor, xRandomFactor) {
+        var opacity = scaleFactor / 4 + 0.4;
+        var scale = scaleFactor * 4 + 1;
+        var duration = 50000 / scale;
+        var textRootG = svg.append("g")
+                .attr("transform", "translate(" + [0, -500] + ")");
 
+
+        var text = textRootG.selectAll("text")
+                .data([ randomTrochee])
+                .enter()
+                .append("text")
+                .attr("text-anchor", "bottom")
+                .text(function (d) {
+                    return d;
+                })
+                .attr("transform", "scale(" + scale + ")")
+                .style("fill", "lightgrey")
+                .style("fill-opacity", opacity);
+
+        var bBox = text[0][0].getBBox();
+        var textWidth = bBox.width * scale;
+        var textHeight = bBox.height * scale;
+        var maxXAnchor = window.innerWidth - textWidth - 10;
+
+        var xAnchor = xRandomFactor * maxXAnchor;
+
+        textRootG.attr("transform", "translate(" + [xAnchor, -5] + ")")
+                .transition()
+                .attr("transform", "translate(" + [xAnchor, window.innerHeight + 15 + textHeight] + ")")
+                .ease("linear")
+                .duration(duration)
+                .remove();
+    }
+
+
+    $(document).ready(function () {
         var svg = d3.select("#animated-trochees").append("svg")
                 .attr("width", "100%")
                 .attr("height", "100%");
-        ;
 
         setInterval(function () {
             var scaleFactor = Math.random();
-            var opacity = scaleFactor / 2 + 0.25;
-            var scale = scaleFactor * 4 + 1;
-            var duration = 50000 / scale;
-            var textRoot = svg.append("g")
-                    .attr("transform", "translate(" + [0, -500] + ")");
+            var xRandomFactor = Math.random();
 
-            var text = textRoot.selectAll("text")
-                    .data([trochees[Math.floor(Math.random() * trochees.length)]])
-                    .enter()
-                    .append("text")
-
-                    .attr("text-anchor", "bottom")
-                    .attr("transform", "scale(" + scale + ")")
-                    .text(function (d) {
-                        return d;
-                    })
-                    .style("fill", "lightgrey")
-                    .style("fill-opacity", opacity);
-
-            var bBox = text[0][0].getBBox();
-            var textWidth = bBox.width;
-            var textHeight = bBox.height;
-            var maxXAnchor = window.innerWidth - (textWidth * scale) - 10;
-            var xAnchor = Math.random() * maxXAnchor;
-            console.log(scale, textWidth, maxXAnchor, maxXAnchor + textWidth, xAnchor);
-            textRoot.attr("transform", "translate(" + [xAnchor, -5] + ")");
-
-            textRoot.transition()
-                    .attr("transform", "translate(" + [xAnchor, window.innerHeight + 15 + textHeight] + ")")
-                    .ease("linear")
-                    .duration(duration)
-                    .remove();
+            $.getJSON("/trochee/next", function(trocheeResponse){
+                drawFallingText(svg, trocheeResponse["trochee"], scaleFactor, xRandomFactor);
+            });
         }, 1500);
     });
 </script>

@@ -60,11 +60,18 @@ h1 {
     font-size:5em;
     text-align: center;
     margin: 200px 0 0 0;
+
 }
 
-text {
-    color: blue;
+
+input{
+    font: inherit;
+    font-size:20pt;
+    background-color: rgb(43,43,43);
+    color: lightgray;
+    border: 1px solid grey;
 }
+
 
 /*
 3
@@ -75,4 +82,11 @@ text {
 */
 #animated-trochees {
     height: 100%;
+}
+
+.panel-style {
+    position: absolute;
+    z-index : 10;
+    width:100%;
+    height:100%
 }

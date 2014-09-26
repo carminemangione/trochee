@@ -3,6 +3,8 @@ package me.trochee.app.resource;
 import me.trochee.app.trochees.Trochees;
 
 import javax.ws.rs.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 @Path("/trochee")
@@ -20,8 +22,10 @@ public class TrocheeResource {
 
     @GET
     @Path("/next")
-    public String next() {
-        return cycler.get();
+    public Map<String, String> next() {
+        final Map<String, String> trocheeResponse = new HashMap<>();
+        trocheeResponse.put("trochee", cycler.get());
+        return trocheeResponse;
     }
 
 }

@@ -19,7 +19,7 @@ public class AddTrocheeResource {
     @GET
     @Produces("text/html")
     public AddTrocheeView get() {
-        return new AddTrocheeView(trochees.getLexicon());
+        return new AddTrocheeView();
     }
 
 }
