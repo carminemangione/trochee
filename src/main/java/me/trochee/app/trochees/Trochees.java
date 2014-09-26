@@ -2,35 +2,20 @@ package me.trochee.app.trochees;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import me.trochee.db.Queries;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Supplier;
 
 public class Trochees {
 
-    private Random random;
-
-    public static Trochees load(DataSource db) throws SQLException {
-        final String loadAll = Queries.fromResource("sql/lexicon/load_all.sql");
-
-        final List<String> lexicon = new ArrayList<>();
-        try (Connection connection = db.getConnection();
-             PreparedStatement ps = connection.prepareStatement(loadAll);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                lexicon.add(rs.getString("trochee"));
-            }
-        }
-        return new Trochees(lexicon);
+    public static Trochees loadAll(DataSource db) throws SQLException {
+        return new Trochees(Trochee.loadAll(db));
     }
 
     private final ImmutableList<String> lexicon;
+    private final Random random;
 
     public Trochees(List<String> lexicon, Random random) {
         this.random = random;
@@ -64,12 +49,12 @@ public class Trochees {
             return iterator.next();
         }
 
-        public synchronized List<String> next(int size){
-            if(size < 1){
+        public synchronized List<String> next(int size) {
+            if (size < 1) {
                 throw new IllegalArgumentException("Must call with size > 0");
             }
             final List<String> nextOnes = new ArrayList<>(size);
-            for(int i = 0; i < size; i++){
+            for (int i = 0; i < size; i++) {
                 nextOnes.add(get());
             }
             return nextOnes;

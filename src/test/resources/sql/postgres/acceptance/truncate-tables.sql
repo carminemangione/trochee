@@ -1,0 +1,1 @@
+DELETE FROM trochee.lexicon;

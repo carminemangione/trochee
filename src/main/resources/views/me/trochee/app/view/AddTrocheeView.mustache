@@ -14,7 +14,7 @@
     </div>
     <div id="new-trochee" class="panel-style">
         <h1><label>
-            <input type="text" name="search" placeholder="Trochee here">
+            <input id="enter-trochee-here" type="text" name="search" placeholder="Enter Trochee Here" maxlength="10">
         </label></h1>
     </div>
 </div>
@@ -65,10 +65,26 @@
             var scaleFactor = Math.random();
             var xRandomFactor = Math.random();
 
-            $.getJSON("/trochee/next", function(trocheeResponse){
+            $.getJSON("/trochee/next", function (trocheeResponse) {
                 drawFallingText(svg, trocheeResponse["trochee"], scaleFactor, xRandomFactor);
             });
         }, 1500);
+        $('#enter-trochee-here')
+                .keydown(function (e) {
+                    if (e.keyCode == 13) {
+                        $(this).trigger("enterKey");
+                    }
+                })
+                .bind("enterKey", function () {
+                    var $this = $(this);
+                    var trochee = $.trim($this.val());
+                    $this.val("");
+                    drawFallingText(svg, trochee, 1, 0.2);
+                    $.ajax({
+                        type: "PUT",
+                        url: "/trochee/" + trochee
+                    });
+                });
     });
 </script>
 </body>
