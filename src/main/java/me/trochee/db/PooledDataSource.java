@@ -1,5 +1,6 @@
 package me.trochee.db;
 
+import com.codahale.metrics.health.HealthCheck;
 import io.dropwizard.lifecycle.Managed;
 import org.apache.tomcat.dbcp.dbcp.PoolingDataSource;
 import org.apache.tomcat.dbcp.pool.ObjectPool;
@@ -92,5 +93,9 @@ public class PooledDataSource implements DataSource, AutoCloseable, Managed {
     @Override
     public void stop() throws Exception {
           close();
+    }
+
+    public HealthCheck healthCheck() {
+        return new DatbaseHealthCheck(this, "SELECT 1");
     }
 }

@@ -79,10 +79,12 @@
                     var $this = $(this);
                     var trochee = $.trim($this.val());
                     $this.val("");
-                    drawFallingText(svg, trochee, 1, 0.2);
                     $.ajax({
                         type: "PUT",
-                        url: "/trochee/" + trochee
+                        url: "/trochee/" + trochee,
+                        success: function(trocheeResponse){
+                            drawFallingText(svg, trocheeResponse["trochee"], 1, 0.2);
+                        }
                     });
                 });
     });

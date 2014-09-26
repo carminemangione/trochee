@@ -35,6 +35,7 @@ public class TrocheeAppService extends Application<Configuration> {
         environment.jersey().register(new AddTrocheeResource(trochees));
 
         environment.jersey().register(new TrocheeResource(trochees, trocheeDB));
+        environment.healthChecks().register("trocheeDB", TrocheeDataSourceFactory.INSTANCE.make().healthCheck());
     }
 
 }
